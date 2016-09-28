@@ -11,11 +11,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HI"
-            android:textColor="@color/primary_text"
-            android:textSize="15sp" />
     </LinearLayout>
 </ScrollView>

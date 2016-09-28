@@ -32,7 +32,7 @@ public class PortfolioFragment extends Fragment {
     }
 
     public void toolbar() {
-        getActivity().setTitle("Portfolio");
+        getActivity().setTitle(getString(R.string.Portfolio));
         if (Build.VERSION.SDK_INT >= 21) {
             float scale = getResources().getDisplayMetrics().density;
             int px = (int) (6 * scale + 0.5f);

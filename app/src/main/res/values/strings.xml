@@ -2,4 +2,9 @@
     <string name="app_name">Project STK</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="Portfolio">Portfolio</string>
+    <string name="Search">Search</string>
+    <string name="Sign_out">Sign out</string>
+    <string name="Title">Title</string>
+    <string name="Subtitle">Subtitle</string>
 </resources>

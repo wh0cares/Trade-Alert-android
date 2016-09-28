@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search"
-        android:icon="@mipmap/ic_launcher"
-        android:title="Search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/Search"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/signout"
-        android:icon="@mipmap/ic_launcher"
-        android:title="Sign out"
+        android:icon="@drawable/ic_signout"
+        android:title="@string/Sign_out"
         app:showAsAction="ifRoom" />
 </menu>

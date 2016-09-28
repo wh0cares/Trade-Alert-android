@@ -21,6 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
     public static NavigationView navigationView;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     @Bind(R.id.toolbar)
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, new PortfolioFragment(), "Portfolio").addToBackStack("Portfolio");
+        ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
         ft.commit();
         initNavigationDrawer();
     }
@@ -53,10 +54,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         switch (item.getItemId()) {
-            case R.id.search:
+            case R.id.search: {
                 return false;
-            default:
+            }
+            case R.id.signout: {
+                return false;
+            }
+            default: {
                 return super.onOptionsItemSelected(item);
+            }
         }
     }
 
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         switch (id) {
                             case R.id.portfolio:
-                                ft.replace(R.id.container, new PortfolioFragment(), "Portfolio").addToBackStack("Portfolio");
+                                ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
                                 break;
                         }
                         ft.commit();
@@ -86,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
         });
         View header = navigationView.getHeaderView(0);
         title = (TextView) header.findViewById(R.id.title);
-        title.setText("Title");
+        title.setText(R.string.Title);
         subtitle = (TextView) header.findViewById(R.id.subtitle);
-        subtitle.setText("Title");
+        subtitle.setText(R.string.Subtitle);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
         } else {
-            PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag("Portfolio");
+            PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.Portfolio));
             if (pf != null && pf.isVisible()) {
                 finish();
             }
