@@ -39,6 +39,7 @@ public class PortfolioFragment extends Fragment {
             View toolbar = getActivity().findViewById(R.id.toolbar);
             toolbar.setElevation(px);
         }
+        MainActivity.setDrawerEnabled(true);
         MainActivity.navigationView.getMenu().getItem(0).setChecked(true);
     }
 }

@@ -42,19 +42,19 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-                <com.wh0_cares.projectstk.utils.SearchBox
-                    android:id="@+id/searchbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="-12dp"
-                    android:layout_marginLeft="-6dp"
-                    android:layout_marginRight="-6dp"
-                    android:layout_marginTop="-6dp"
-                    android:visibility="gone" />
-
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
+
+        <com.wh0_cares.projectstk.utils.SearchBox
+            android:id="@+id/searchbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-12dp"
+            android:layout_marginLeft="-6dp"
+            android:layout_marginRight="-6dp"
+            android:layout_marginTop="-6dp"
+            android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/container"

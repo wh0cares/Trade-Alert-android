@@ -10,4 +10,6 @@
     <string name="Error_getting_data">Error getting data</string>
     <string name="Invalid_response">Invalid response</string>
     <string name="search_url"><![CDATA[https://www.google.com/finance/match?matchtype=matchall&ei=NU_wV4iMCdemeJfGuZAG&q=]]></string>
+    <string name="Details">Details</string>
+    <string name="getStock_url">http://192.168.1.17:3000/api/stocks/</string>
 </resources>

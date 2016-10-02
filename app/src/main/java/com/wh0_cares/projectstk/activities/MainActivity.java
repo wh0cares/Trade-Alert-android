@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
+import com.wh0_cares.projectstk.fragments.DetailFragment;
 import com.wh0_cares.projectstk.fragments.PortfolioFragment;
 import com.wh0_cares.projectstk.utils.SearchBox;
 
@@ -39,11 +41,10 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     public static NavigationView navigationView;
     private final OkHttpClient client = new OkHttpClient();
-    public ActionBarDrawerToggle actionBarDrawerToggle;
+    public static ActionBarDrawerToggle actionBarDrawerToggle;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.drawer)
-    DrawerLayout drawerLayout;
+    static DrawerLayout drawerLayout;
     TextView title, subtitle;
     SearchBox search;
     boolean searchopened = false;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
         ft.commit();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         initNavigationDrawer();
         search = (SearchBox) findViewById(R.id.searchbox);
         setUpSearch();
@@ -220,7 +222,14 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     @Override
     public void onSearch(String s) {
-        //TODO Open result
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment fr = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putString("symbol", s);
+        fr.setArguments(args);
+        ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
+        ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
+        ft.commit();
         search.setSearchString("");
         search.clearSearchable();
         search.clearResults();
@@ -228,7 +237,14 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     @Override
     public void onResultClick(SearchResult s) {
-        //TODO Open result
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment fr = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putString("symbol", String.valueOf(s).substring(0, String.valueOf(s).indexOf(" - ")));
+        fr.setArguments(args);
+        ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
+        ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
+        ft.commit();
         search.setSearchString("");
         search.clearSearchable();
         search.clearResults();
@@ -270,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         });
     }
 
-    public void setDrawerEnabled(boolean enabled) {
+    public static void setDrawerEnabled(boolean enabled) {
         if (enabled) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
