@@ -4,6 +4,6 @@
         <item
             android:id="@+id/portfolio"
             android:title="@string/Portfolio"
-            android:icon="@drawable/ic_portfolio"/>
+            android:icon="@drawable/ic_portfolio" />
     </group>
 </menu>

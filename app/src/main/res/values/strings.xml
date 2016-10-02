@@ -7,4 +7,7 @@
     <string name="Sign_out">Sign out</string>
     <string name="Title">Title</string>
     <string name="Subtitle">Subtitle</string>
+    <string name="Error_getting_data">Error getting data</string>
+    <string name="Invalid_response">Invalid response</string>
+    <string name="search_url"><![CDATA[https://www.google.com/finance/match?matchtype=matchall&ei=NU_wV4iMCdemeJfGuZAG&q=]]></string>
 </resources>

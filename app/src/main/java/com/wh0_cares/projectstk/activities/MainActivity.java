@@ -14,21 +14,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.fragments.PortfolioFragment;
+import com.wh0_cares.projectstk.utils.SearchBox;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchBox.SearchListener {
 
     public static NavigationView navigationView;
+    private final OkHttpClient client = new OkHttpClient();
     public ActionBarDrawerToggle actionBarDrawerToggle;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.drawer)
     DrawerLayout drawerLayout;
     TextView title, subtitle;
+    SearchBox search;
+    boolean searchopened = false;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +57,42 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
         ft.commit();
         initNavigationDrawer();
+        search = (SearchBox) findViewById(R.id.searchbox);
+        setUpSearch();
+    }
+
+    private void setUpSearch() {
+        search.setLogoText("");
+        search.setSearchString("");
+        search.clearFocus();
+        search.setSearchListener(this);
+    }
+
+    private void openSearch() {
+        search.revealFromMenuItem(R.id.search, this);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItem signoutItem = menu.findItem(R.id.signout);
+        searchItem.setVisible(false);
+        signoutItem.setVisible(false);
+        setDrawerEnabled(false);
+    }
+
+    private void closeSearch() {
+        setDrawerEnabled(true);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItem signoutItem = menu.findItem(R.id.signout);
+        searchItem.setVisible(true);
+        signoutItem.setVisible(true);
+        search.hideCircularly(MainActivity.this);
+        search.setSearchString("");
+        search.clearSearchable();
+        search.clearResults();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -55,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (item.getItemId()) {
             case R.id.search: {
+                openSearch();
                 return false;
             }
             case R.id.signout: {
@@ -116,13 +165,111 @@ public class MainActivity extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
         } else {
-            PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.Portfolio));
-            if (pf != null && pf.isVisible()) {
-                finish();
+            if (searchopened) {
+                search.toggleSearch();
+                searchopened = false;
+            } else {
+                PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.Portfolio));
+                if (pf != null && pf.isVisible()) {
+                    finish();
+                }
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                getSupportFragmentManager().popBackStack();
+                ft.setCustomAnimations(R.anim.back1, R.anim.back2);
             }
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            getSupportFragmentManager().popBackStack();
-            ft.setCustomAnimations(R.anim.back1, R.anim.back2);
+        }
+    }
+
+    @Override
+    public void onSearchOpened() {
+        searchopened = true;
+    }
+
+    @Override
+    public void onSearchCleared() {
+    }
+
+    @Override
+    public void onSearchClosed() {
+        closeSearch();
+        searchopened = false;
+    }
+
+    @Override
+    public void onSearchTermChanged(String s) {
+        search.clearSearchable();
+        if (!s.equals("")) {
+            try {
+                searchSymbol(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            search.clearResults();
+        }
+    }
+
+    @Override
+    public void onSearch(String s) {
+        //TODO Open result
+        search.setSearchString("");
+        search.clearSearchable();
+        search.clearResults();
+    }
+
+    @Override
+    public void onResultClick(SearchResult s) {
+        //TODO Open result
+        search.setSearchString("");
+        search.clearSearchable();
+        search.clearResults();
+    }
+
+    public void searchSymbol(String symbol) throws Exception {
+        Request request = new Request.Builder()
+                .url(getString(R.string.search_url) + symbol)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response.body());
+                }
+                try {
+                    JSONObject obj = new JSONObject(response.body().string());
+                    JSONArray matchesArray = obj.getJSONArray("matches");
+                    if (matchesArray.length() >= 1) {
+                        for (int i = 0; i < matchesArray.length(); i++) {
+                            JSONObject stockObject = matchesArray.getJSONObject(i);
+                            String stockIndex = stockObject.getString("e");
+                            if (stockIndex.equalsIgnoreCase("NASDAQ")) {
+                                String stockSymbol = stockObject.getString("t");
+                                String stockName = stockObject.getString("n");
+                                SearchResult option = new SearchResult(stockSymbol + " - " + stockName, getResources().getDrawable(R.drawable.ic_signout));
+                                search.addSearchable(option);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void setDrawerEnabled(boolean enabled) {
+        if (enabled) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+            actionBarDrawerToggle.syncState();
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+            actionBarDrawerToggle.syncState();
         }
     }
 }

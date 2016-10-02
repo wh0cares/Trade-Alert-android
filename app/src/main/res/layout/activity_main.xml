@@ -7,13 +7,12 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -26,12 +25,24 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+        <com.wh0_cares.projectstk.utils.SearchBox
+            android:id="@+id/searchbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-12dp"
+            android:layout_marginLeft="-6dp"
+            android:layout_marginRight="-6dp"
+            android:layout_marginTop="-6dp"
+            android:elevation="7dp"
+            android:visibility="gone" />
+
         <FrameLayout
             android:id="@+id/container"
+            android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
