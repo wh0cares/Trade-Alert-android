@@ -2,6 +2,7 @@ package com.wh0_cares.projectstk.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quinny898.library.persistentsearch.SearchResult;
@@ -45,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     TextView title, subtitle;
     SearchBox search;
     boolean searchopened = false;
-    private Menu menu;
+    static ImageView imageView;
+    static CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         initNavigationDrawer();
         search = (SearchBox) findViewById(R.id.searchbox);
         setUpSearch();
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        imageView = (ImageView) findViewById(R.id.backdrop);
+        disableCollapse();
     }
 
     private void setUpSearch() {
@@ -70,19 +76,13 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     private void openSearch() {
         search.revealFromMenuItem(R.id.search, this);
-        MenuItem searchItem = menu.findItem(R.id.search);
-        MenuItem signoutItem = menu.findItem(R.id.signout);
-        searchItem.setVisible(false);
-        signoutItem.setVisible(false);
+        toolbar.setVisibility(View.GONE);
         setDrawerEnabled(false);
     }
 
     private void closeSearch() {
+        toolbar.setVisibility(View.VISIBLE);
         setDrawerEnabled(true);
-        MenuItem searchItem = menu.findItem(R.id.search);
-        MenuItem signoutItem = menu.findItem(R.id.signout);
-        searchItem.setVisible(true);
-        signoutItem.setVisible(true);
         search.hideCircularly(MainActivity.this);
         search.setSearchString("");
         search.clearSearchable();
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        this.menu = menu;
         return true;
     }
 
@@ -207,6 +206,16 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         } else {
             search.clearResults();
         }
+    }
+
+    public static void disableCollapse() {
+        imageView.setVisibility(View.GONE);
+        collapsingToolbar.setTitleEnabled(false);
+    }
+
+    public static void enableCollapse() {
+        imageView.setVisibility(View.VISIBLE);
+        collapsingToolbar.setTitleEnabled(true);
     }
 
     @Override
