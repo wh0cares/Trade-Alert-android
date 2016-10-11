@@ -9,7 +9,23 @@
     <string name="Subtitle">Subtitle</string>
     <string name="Error_getting_data">Error getting data</string>
     <string name="Invalid_response">Invalid response</string>
-    <string name="search_url"><![CDATA[https://www.google.com/finance/match?matchtype=matchall&ei=NU_wV4iMCdemeJfGuZAG&q=]]></string>
     <string name="Details">Details</string>
+    <string name="Username">Username</string>
+    <string name="Email">Email</string>
+    <string name="Password">Password</string>
+    <string name="Already_have_an_account_login">Already have an account? Login!</string>
+    <string name="Dont_have_an_account_register">Don\'t have an account? Register!</string>
+    <string name="Register">Register</string>
+    <string name="Login">Login</string>
+    <string name="Enter_a_username">Enter a username</string>
+    <string name="Enter_a_password">Enter a password</string>
+    <string name="Enter_a_valid_email_address">Enter a valid email address</string>
+
+    <string name="search_url"><![CDATA[https://www.google.com/finance/match?matchtype=matchall&ei=NU_wV4iMCdemeJfGuZAG&q=]]></string>
+    <string name="login_url">http://192.168.1.17:3000/api/users/login</string>
+    <string name="signup_url">http://192.168.1.17:3000/api/users/register</string>
     <string name="getStock_url">http://192.168.1.17:3000/api/stocks/</string>
+
+    <string name="Authenticating">Authenticating…</string>
+    <string name="Creating_account">Creating Account…</string>
 </resources>

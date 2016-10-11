@@ -16,7 +16,6 @@ import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.activities.MainActivity;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,35 +76,36 @@ public class DetailFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                error();
+                error(getString(R.string.Error_getting_data));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    error();
+                    error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
                 }
                 try {
                     JSONObject obj = new JSONObject(response.body().string());
                     pDialog.dismiss();
                 } catch (JSONException e) {
-                    error();
+                    error(getString(R.string.Invalid_response));
                     e.printStackTrace();
                 }
             }
         });
     }
 
-    public void error() {
+    public void error(final String message) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 pDialog.dismiss();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 getActivity().getSupportFragmentManager().popBackStack();
                 ft.setCustomAnimations(R.anim.back1, R.anim.back2);
-                Toast.makeText(getActivity(), R.string.Error_getting_data, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
+
 }

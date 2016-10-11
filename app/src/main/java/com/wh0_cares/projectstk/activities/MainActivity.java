@@ -1,5 +1,6 @@
 package com.wh0_cares.projectstk.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,6 +22,7 @@ import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.fragments.DetailFragment;
 import com.wh0_cares.projectstk.fragments.PortfolioFragment;
+import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 import com.wh0_cares.projectstk.utils.SearchBox;
 
 import org.json.JSONArray;
@@ -54,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int setup = SaveSharedPreference.getSetup(MainActivity.this);
+        if (setup == 0) {
+            Intent intent = new Intent(MainActivity.this, SignupLoginActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -108,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                 return false;
             }
             case R.id.signout: {
+                SaveSharedPreference.clearData(this);
+                Intent intent = new Intent(MainActivity.this, SignupLoginActivity.class);
+                startActivity(intent);
+                finish();
                 return false;
             }
             default: {
