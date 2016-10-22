@@ -1,6 +1,5 @@
 package com.wh0_cares.projectstk.fragments;
 
-import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +59,8 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
 //        pDialog.setCanceledOnTouchOutside(false);
         refresh.setOnRefreshListener(this);
         refresh.setColorSchemeResources(R.color.colorPrimary);
-        refresh.post(new Runnable() {@Override
+        refresh.post(new Runnable() {
+                         @Override
                          public void run() {
                              refresh.setRefreshing(true);
                              try {
@@ -94,6 +95,23 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             public void onLongClick(View view, int position) {
             }
         }));
+        ItemTouchHelper.SimpleCallback touchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                try {
+                    deleteUserStock(stocks.get(viewHolder.getAdapterPosition()).getID(), viewHolder.getAdapterPosition());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
+        touchHelper.attachToRecyclerView(rv);
     }
 
     public void toolbar() {
@@ -107,6 +125,35 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
         }
         MainActivity.setDrawerEnabled(true);
         MainActivity.navigationView.getMenu().getItem(0).setChecked(true);
+    }
+
+    public void deleteUserStock(final int stockID, final int stockPosition) throws Exception {
+        Request request = new Request.Builder()
+                .url(getString(R.string.portfolio_url) + stockID)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
+                .delete()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                error(getString(R.string.Error_getting_data));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    error(getString(R.string.Error_getting_data));
+                    throw new IOException("Unexpected code " + response.body());
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        stocks.remove(stockPosition);
+                        adapter.notifyItemRemoved(stockPosition);
+                    }
+                });
+            }
+        });
     }
 
     public void getPortfolio() throws Exception {
@@ -139,11 +186,13 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         String name = item.getString("name");
                         String index = item.getString("index");
                         String symbol = item.getString("symbol");
+                        int id = item.getInt("id");
                         PortfolioData stock = new PortfolioData();
                         stock.setFirstLetter(firstLetter);
                         stock.setName(name);
                         stock.setIndex(index);
                         stock.setSymbol(symbol);
+                        stock.setID(id);
                         stocks.add(stock);
 
                     }

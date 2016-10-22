@@ -5,15 +5,17 @@ public class PortfolioData {
     public String name;
     public String index;
     public String symbol;
+    public int id;
 
     public PortfolioData() {
     }
 
-    public PortfolioData(String firstLetter, String name, String index, String symbol) {
+    public PortfolioData(String firstLetter, String name, String index, String symbol, int id) {
         this.firstLetter = firstLetter;
         this.name = name;
         this.index = index;
         this.symbol = symbol;
+        this.id = id;
     }
 
     public String getFirstLetter() {
@@ -29,6 +31,10 @@ public class PortfolioData {
         return symbol;
     }
 
+    public int getID() {
+        return id;
+    }
+
     public void setFirstLetter(String firstLetter) {
         this.firstLetter = firstLetter;
     }
@@ -40,6 +46,10 @@ public class PortfolioData {
     }
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
 }
