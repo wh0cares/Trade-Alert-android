@@ -48,6 +48,11 @@ public class DetailFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setIndeterminate(true);
         pDialog.setCanceledOnTouchOutside(false);
+        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Add to portfolio
+            }
+        });
     }
 
     public void toolbar() {

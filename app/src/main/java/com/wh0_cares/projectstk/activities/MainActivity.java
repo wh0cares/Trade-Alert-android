@@ -3,6 +3,7 @@ package com.wh0_cares.projectstk.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     private final OkHttpClient client = new OkHttpClient();
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    public static FloatingActionButton fab;
     SearchBox search;
     boolean searchopened = false;
     static ImageView imageView;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
             imageView = (ImageView) findViewById(R.id.backdrop);
             disableCollapse();
+            fab = (FloatingActionButton) findViewById(R.id.fab);
         }
     }
 
@@ -221,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                             if (stockIndex.equalsIgnoreCase("NASDAQ")) {
                                 String stockSymbol = stockObject.getString("t");
                                 String stockName = stockObject.getString("n");
-                                SearchResult option = new SearchResult(stockSymbol + " - " + stockName, getResources().getDrawable(R.drawable.ic_signout));
+                                SearchResult option = new SearchResult(stockSymbol + " - " + stockName);
                                 search.addSearchable(option);
                             }
                         }
