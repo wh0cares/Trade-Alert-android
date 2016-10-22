@@ -61,20 +61,21 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             Intent intent = new Intent(MainActivity.this, SignupLoginActivity.class);
             startActivity(intent);
             this.finish();
+        } else {
+            setContentView(R.layout.activity_main);
+            ButterKnife.bind(this);
+            setSupportActionBar(toolbar);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
+            ft.commit();
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+            initNavigationDrawer();
+            search = (SearchBox) findViewById(R.id.searchbox);
+            setUpSearch();
+            collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+            imageView = (ImageView) findViewById(R.id.backdrop);
+            disableCollapse();
         }
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
-        ft.commit();
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        initNavigationDrawer();
-        search = (SearchBox) findViewById(R.id.searchbox);
-        setUpSearch();
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        imageView = (ImageView) findViewById(R.id.backdrop);
-        disableCollapse();
     }
 
     private void setUpSearch() {
