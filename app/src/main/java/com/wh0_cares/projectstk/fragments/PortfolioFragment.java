@@ -123,8 +123,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             View toolbar = getActivity().findViewById(R.id.toolbar);
             toolbar.setElevation(px);
         }
-        MainActivity.setDrawerEnabled(true);
-        MainActivity.navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     public void deleteUserStock(final int stockID, final int stockPosition) throws Exception {

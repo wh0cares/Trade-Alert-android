@@ -59,7 +59,6 @@ public class DetailFragment extends Fragment {
             View toolbar = getActivity().findViewById(R.id.toolbar);
             toolbar.setElevation(px);
         }
-        MainActivity.setDrawerEnabled(false);
     }
 
     @Override

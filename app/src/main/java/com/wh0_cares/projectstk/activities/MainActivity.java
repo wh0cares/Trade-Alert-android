@@ -2,21 +2,15 @@ package com.wh0_cares.projectstk.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
@@ -41,13 +35,9 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements SearchBox.SearchListener {
 
-    public static NavigationView navigationView;
     private final OkHttpClient client = new OkHttpClient();
-    public static ActionBarDrawerToggle actionBarDrawerToggle;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    static DrawerLayout drawerLayout;
-    TextView title, subtitle;
     SearchBox search;
     boolean searchopened = false;
     static ImageView imageView;
@@ -68,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
             ft.commit();
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-            initNavigationDrawer();
             search = (SearchBox) findViewById(R.id.searchbox);
             setUpSearch();
             collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -88,12 +76,10 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     private void openSearch() {
         search.revealFromMenuItem(R.id.search, this);
         toolbar.setVisibility(View.GONE);
-        setDrawerEnabled(false);
     }
 
     private void closeSearch() {
         toolbar.setVisibility(View.VISIBLE);
-        setDrawerEnabled(true);
         search.hideCircularly(MainActivity.this);
         search.setSearchString("");
         search.clearSearchable();
@@ -108,9 +94,6 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         switch (item.getItemId()) {
             case R.id.search: {
                 openSearch();
@@ -129,68 +112,19 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         }
     }
 
-    public void initNavigationDrawer() {
-
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                final int id = menuItem.getItemId();
-                drawerLayout.closeDrawers();
-                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (id) {
-                            case R.id.portfolio:
-                                ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
-                                break;
-                        }
-                        ft.commit();
-                    }
-                }, 250);
-                return true;
-            }
-        });
-        View header = navigationView.getHeaderView(0);
-        title = (TextView) header.findViewById(R.id.title);
-        title.setText(R.string.Title);
-        subtitle = (TextView) header.findViewById(R.id.subtitle);
-        subtitle.setText(R.string.Subtitle);
-
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-            @Override
-            public void onDrawerClosed(View v) {
-                super.onDrawerClosed(v);
-            }
-
-            @Override
-            public void onDrawerOpened(View v) {
-                super.onDrawerOpened(v);
-            }
-        };
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-    }
-
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawers();
+        if (searchopened) {
+            search.toggleSearch();
+            searchopened = false;
         } else {
-            if (searchopened) {
-                search.toggleSearch();
-                searchopened = false;
-            } else {
-                PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.Portfolio));
-                if (pf != null && pf.isVisible()) {
-                    finish();
-                }
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                getSupportFragmentManager().popBackStack();
-                ft.setCustomAnimations(R.anim.back1, R.anim.back2);
+            PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.Portfolio));
+            if (pf != null && pf.isVisible()) {
+                finish();
             }
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            getSupportFragmentManager().popBackStack();
+            ft.setCustomAnimations(R.anim.back1, R.anim.back2);
         }
     }
 
@@ -297,17 +231,5 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                 }
             }
         });
-    }
-
-    public static void setDrawerEnabled(boolean enabled) {
-        if (enabled) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-            actionBarDrawerToggle.syncState();
-        } else {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
-            actionBarDrawerToggle.syncState();
-        }
     }
 }
