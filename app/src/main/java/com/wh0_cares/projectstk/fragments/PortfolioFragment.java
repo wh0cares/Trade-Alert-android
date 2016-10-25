@@ -85,6 +85,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                 Fragment fr = new DetailFragment();
                 Bundle args = new Bundle();
                 args.putString("symbol", stock.getSymbol());
+                args.putString("title", stock.getSymbol() + " - " + stock.getName());
                 fr.setArguments(args);
                 ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
                 ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
@@ -104,7 +105,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 try {
-                    deleteUserStock(stocks.get(viewHolder.getAdapterPosition()).getID(), viewHolder.getAdapterPosition());
+                    removeFromPortfolio(stocks.get(viewHolder.getAdapterPosition()).getSymbol(), viewHolder.getAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -125,9 +126,9 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
         }
     }
 
-    public void deleteUserStock(final int stockID, final int stockPosition) throws Exception {
+    public void removeFromPortfolio(final String stockSymbol, final int stockPosition) throws Exception {
         Request request = new Request.Builder()
-                .url(getString(R.string.portfolio_url) + stockID)
+                .url(getString(R.string.portfolio_url) + stockSymbol)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
                 .delete()
@@ -170,7 +171,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
@@ -190,7 +191,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         stock.setName(name);
                         stock.setIndex(index);
                         stock.setSymbol(symbol);
-                        stock.setID(id);
                         stocks.add(stock);
 
                     }
@@ -199,6 +199,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                             //pDialog.dismiss();
                             adapter.notifyDataSetChanged();
                             refresh.setRefreshing(false);
+                            response.body().close();
                         }
                     });
                 } catch (JSONException e) {

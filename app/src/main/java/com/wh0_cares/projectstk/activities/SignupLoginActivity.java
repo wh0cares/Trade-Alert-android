@@ -134,7 +134,7 @@ public class SignupLoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
@@ -145,6 +145,7 @@ public class SignupLoginActivity extends AppCompatActivity {
                     final String access_token = dataObj.getString("access_token");
                     runOnUiThread(new Runnable() {
                         public void run() {
+                            response.body().close();
                             SaveSharedPreference.setToken(SignupLoginActivity.this, access_token);
                             SaveSharedPreference.setSetup(SignupLoginActivity.this, 1);
                             pDialog.dismiss();
@@ -191,6 +192,7 @@ public class SignupLoginActivity extends AppCompatActivity {
                         try {
                             JSONObject obj = new JSONObject(response.body().string());
                             String message = obj.getString("message");
+                            response.body().close();
                             error(message);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -198,8 +200,6 @@ public class SignupLoginActivity extends AppCompatActivity {
                     }
                     throw new IOException("Unexpected code " + response.body());
                 }
-                try {
-                    JSONObject obj = new JSONObject(response.body().string());
                     runOnUiThread(new Runnable() {
                         public void run() {
                             pDialog.dismiss();
@@ -211,10 +211,6 @@ public class SignupLoginActivity extends AppCompatActivity {
                             }
                         }
                     });
-                } catch (JSONException e) {
-                    error(getString(R.string.Invalid_response));
-                    e.printStackTrace();
-                }
             }
         });
     }

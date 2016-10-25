@@ -21,13 +21,25 @@
     <string name="Enter_a_password">Enter a password</string>
     <string name="Enter_a_valid_email_address">Enter a valid email address</string>
 
+
     <string name="search_url"><![CDATA[https://www.google.com/finance/match?matchtype=matchall&ei=NU_wV4iMCdemeJfGuZAG&q=]]></string>
-    <string name="login_url">http://192.168.1.18:3000/api/users/login</string>
-    <string name="signup_url">http://192.168.1.18:3000/api/users/register</string>
-    <string name="getStock_url">http://192.168.1.18:3000/api/stocks/</string>
-    <string name="portfolio_url">http://192.168.1.18:3000/api/users/stocks/</string>
+    <string name="login_url">http://192.168.1.18:3000/api/users/login/</string>
+    <string name="signup_url">http://192.168.1.18:3000/api/users/register/</string>
+    <string name="portfolio_url">http://192.168.1.18:3000/api/users/portfolio/</string>
+    <string name="realtime_url">http://192.168.1.18:3000/api/stocks/:symbol/:index/realtime</string>
+    <string name="checkDatabase_url">http://192.168.1.18:3000/api/stocks/:symbol/</string>
+    <string name="addToDatabase_url">http://192.168.1.18:3000/api/stocks/</string>
+
 
     <string name="Authenticating">Authenticating…</string>
     <string name="Creating_account">Creating account…</string>
     <string name="Getting_portfolio">Getting portfolio…</string>
+    <string name="Open">Open</string>
+    <string name="Previous_close">Previous close</string>
+    <string name="Volume">Volume</string>
+    <string name="_50_day_volume_avg">50 day volume avg</string>
+    <string name="Market_cap">Market cap</string>
+    <string name="PE_ratio">P/E Ratio</string>
+    <string name="Earnings_per_share">Earnings er share</string>
+    <string name="Current_yield">Current yield</string>
 </resources>

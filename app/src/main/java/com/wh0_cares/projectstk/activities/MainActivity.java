@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     SearchBox search;
     boolean searchopened = false;
     static ImageView imageView;
-    static CollapsingToolbarLayout collapsingToolbar;
+    public static CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,17 +172,17 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     @Override
     public void onSearch(String s) {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment fr = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString("symbol", s);
-        fr.setArguments(args);
-        ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
-        ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
-        ft.commit();
-        search.setSearchString("");
-        search.clearSearchable();
-        search.clearResults();
+//        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        Fragment fr = new DetailFragment();
+//        Bundle args = new Bundle();
+//        args.putString("symbol", s);
+//        fr.setArguments(args);
+//        ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
+//        ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
+//        ft.commit();
+//        search.setSearchString("");
+//        search.clearSearchable();
+//        search.clearResults();
     }
 
     @Override
@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         Fragment fr = new DetailFragment();
         Bundle args = new Bundle();
         args.putString("symbol", String.valueOf(s).substring(0, String.valueOf(s).indexOf(" - ")));
+        args.putString("title", String.valueOf(s));
         fr.setArguments(args);
         ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
         ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                             }
                         }
                     }
+                    response.body().close();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

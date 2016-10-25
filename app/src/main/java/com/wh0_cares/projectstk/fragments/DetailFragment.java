@@ -10,29 +10,50 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.activities.MainActivity;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DetailFragment extends Fragment {
 
     private ProgressDialog pDialog;
-    String stockSymbol;
+    String stockSymbol, toolbarTitle;
     private final OkHttpClient client = new OkHttpClient();
+    @Bind(R.id.open_value)
+    TextView open;
+    @Bind(R.id.prevClose_value)
+    TextView prevClose;
+    @Bind(R.id.volume_value)
+    TextView volume;
+    @Bind(R.id.volume50avg_value)
+    TextView volume50avg;
+    @Bind(R.id.marketCap_value)
+    TextView marketCap;
+    @Bind(R.id.peRatio_value)
+    TextView peRatio;
+    @Bind(R.id.eps_value)
+    TextView eps;
+    @Bind(R.id.currentYield_value)
+    TextView currentYield;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +64,7 @@ public class DetailFragment extends Fragment {
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         stockSymbol = getArguments().getString("symbol");
+        toolbarTitle = getArguments().getString("title");
         toolbar();
         setHasOptionsMenu(true);
         pDialog = new ProgressDialog(getActivity());
@@ -50,13 +72,23 @@ public class DetailFragment extends Fragment {
         pDialog.setCanceledOnTouchOutside(false);
         MainActivity.fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Add to portfolio
+                try {
+                    addToPorfolio(stockSymbol);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
+        try {
+            getStockRealtime(stockSymbol);
+            checkDatabase(stockSymbol);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void toolbar() {
-        getActivity().setTitle(stockSymbol);
+        MainActivity.collapsingToolbar.setTitle(toolbarTitle);
         MainActivity.enableCollapse();
         if (Build.VERSION.SDK_INT >= 21) {
             float scale = getResources().getDisplayMetrics().density;
@@ -72,10 +104,68 @@ public class DetailFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void getStock(String symbol) throws Exception {
+    public void getStockRealtime(String symbol) throws Exception {
         Request request = new Request.Builder()
-                .url(getString(R.string.getStock_url) + symbol)
+                .url(getString(R.string.realtime_url).replaceAll(":symbol", symbol).replaceAll(":index", "NASDAQ"))
                 .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                error(getString(R.string.Error_getting_data));
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    error(getString(R.string.Error_getting_data));
+                    throw new IOException("Unexpected code " + response.body());
+                }
+                try {
+                    JSONObject obj = new JSONObject(response.body().string());
+                    JSONArray dataArray = obj.getJSONArray("data");
+                    JSONObject dataArrayObj = dataArray.getJSONObject(0);
+                    final String open = dataArrayObj.getString("open");
+                    final String prevClose = dataArrayObj.getString("prevClose");
+                    final String volume = dataArrayObj.getString("volume");
+                    final String avgVolume50Day = dataArrayObj.getString("avgVolume50Day");
+                    final String marketCap = dataArrayObj.getString("marketCap");
+                    final String peRatio = dataArrayObj.getString("peRatio");
+                    final String eps = dataArrayObj.getString("eps");
+                    final String currentYield = dataArrayObj.getString("currentYield");
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            pDialog.dismiss();
+                            displayData(new String[]{open, prevClose, volume, avgVolume50Day, marketCap, peRatio, eps, currentYield});
+                            response.body().close();
+                        }
+                    });
+                } catch (JSONException e) {
+                    error(getString(R.string.Invalid_response));
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void displayData(String[] data) {
+        open.setText(data[0]);
+        prevClose.setText(data[1]);
+        volume.setText(data[2]);
+        volume50avg.setText(data[3]);
+        marketCap.setText(data[4]);
+        peRatio.setText(data[5]);
+        eps.setText(data[6]);
+        currentYield.setText(data[7]);
+    }
+
+    public void addToPorfolio(final String symbol) throws Exception {
+        RequestBody formBody = new FormBody.Builder()
+                .build();
+        Request request = new Request.Builder()
+                .url(getString(R.string.portfolio_url) + symbol)
+                .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
+                .post(formBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -89,13 +179,72 @@ public class DetailFragment extends Fragment {
                     error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
                 }
-                try {
-                    JSONObject obj = new JSONObject(response.body().string());
-                    pDialog.dismiss();
-                } catch (JSONException e) {
-                    error(getString(R.string.Invalid_response));
-                    e.printStackTrace();
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getActivity(), "Added " + symbol + " to porfolio", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkDatabase(final String symbol) throws Exception {
+        Request request = new Request.Builder()
+                .url(getString(R.string.checkDatabase_url).replaceAll(":symbol", symbol))
+                .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                error(getString(R.string.Error_getting_data));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    if (response.code() == 404) {
+                        try {
+                            addToDatabase(symbol);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    throw new IOException("Unexpected code " + response.body());
                 }
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        pDialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    public void addToDatabase(final String symbol) throws Exception {
+        RequestBody formBody = new FormBody.Builder()
+                .add("index", "NASDAQ")
+                .add("symbol", symbol)
+                .build();
+        Request request = new Request.Builder()
+                .url(getString(R.string.addToDatabase_url))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response.body());
+                }
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                        }
+                    });
             }
         });
     }
