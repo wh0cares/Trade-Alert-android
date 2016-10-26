@@ -1,7 +1,12 @@
 package com.wh0_cares.projectstk.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -36,7 +41,6 @@ import okhttp3.Response;
 
 public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    //private ProgressDialog pDialog;
     private final OkHttpClient client = new OkHttpClient();
     @Bind(R.id.rv)
     RecyclerView rv;
@@ -54,9 +58,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         toolbar();
-//        pDialog = new ProgressDialog(getActivity());
-//        pDialog.setIndeterminate(true);
-//        pDialog.setCanceledOnTouchOutside(false);
         refresh.setOnRefreshListener(this);
         refresh.setColorSchemeResources(R.color.colorPrimary);
         refresh.post(new Runnable() {
@@ -103,11 +104,68 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                try {
-                    removeFromPortfolio(stocks.get(viewHolder.getAdapterPosition()).getSymbol(), viewHolder.getAdapterPosition());
-                } catch (Exception e) {
-                    e.printStackTrace();
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                final int swipePos = viewHolder.getAdapterPosition();
+                final PortfolioData swipeStock = stocks.get(swipePos);
+                Snackbar snackbar = Snackbar
+                        .make(rv, "Stock removed from portfolio", Snackbar.LENGTH_LONG)
+                        .setAction("Undo", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                stocks.add(swipePos, swipeStock);
+                                adapter.notifyItemInserted(swipePos);
+                            }
+                        }).setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                switch (event) {
+                                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                        break;
+                                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                        try {
+                                            removeFromPortfolio(swipeStock.getSymbol(), swipePos);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        break;
+                                }
+                            }
+                        });
+                snackbar.show();
+                stocks.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                    View itemView = viewHolder.itemView;
+
+                    Paint paint = new Paint();
+                    Bitmap bitmap;
+                    float translationX;
+
+                    if (dX > 0) { //swiping right
+                        translationX = Math.min(dX, viewHolder.itemView.getWidth() / 6);
+                        paint.setColor(getResources().getColor(R.color.red));
+                        bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_delete);
+                        float height = (itemView.getHeight() / 2) - (bitmap.getHeight() / 2);
+
+                        c.drawRect((float) itemView.getLeft() + dX, (float) itemView.getTop(), (float) itemView.getLeft(), (float) itemView.getBottom(), paint);
+                        c.drawBitmap(bitmap, 96f, (float) itemView.getTop() + height, null);
+
+                    } else { //swiping left
+                        translationX = Math.max(dX, (-1)* viewHolder.itemView.getWidth() / 6);
+                        paint.setColor(getResources().getColor(R.color.red));
+                        bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_delete);
+                        float height = (itemView.getHeight() / 2) - (bitmap.getHeight() / 2);
+                        float bitmapWidth = bitmap.getWidth();
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom(), paint);
+                        c.drawBitmap(bitmap, ((float) itemView.getRight() - bitmapWidth) - 96f, (float) itemView.getTop() + height, null);
+                    }
+                    super.onChildDraw(c, recyclerView, viewHolder, translationX, dY, actionState, isCurrentlyActive);
                 }
             }
         };
@@ -145,19 +203,11 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                     error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
                 }
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        stocks.remove(stockPosition);
-                        adapter.notifyItemRemoved(stockPosition);
-                    }
-                });
             }
         });
     }
 
     public void getPortfolio() throws Exception {
-//        pDialog.setMessage(getString(R.string.Getting_portfolio));
-//        pDialog.show();
         stocks.clear();
         Request request = new Request.Builder()
                 .url(getString(R.string.portfolio_url))
@@ -185,7 +235,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         String name = item.getString("name");
                         String index = item.getString("index");
                         String symbol = item.getString("symbol");
-                        int id = item.getInt("id");
                         PortfolioData stock = new PortfolioData();
                         stock.setFirstLetter(firstLetter);
                         stock.setName(name);
@@ -196,7 +245,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                     }
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            //pDialog.dismiss();
                             adapter.notifyDataSetChanged();
                             refresh.setRefreshing(false);
                             response.body().close();
@@ -213,7 +261,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
     public void error(final String message) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                //pDialog.dismiss();
                 refresh.setRefreshing(false);
                 Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             }

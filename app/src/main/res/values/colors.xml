@@ -9,4 +9,5 @@
     <color name="white">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="black_50_percent">#80000000</color>
+    <color name="red">#F44336</color>
 </resources>
