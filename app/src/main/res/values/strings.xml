@@ -40,6 +40,14 @@
     <string name="_50_day_volume_avg">50 day volume avg</string>
     <string name="Market_cap">Market cap</string>
     <string name="PE_ratio">P/E Ratio</string>
-    <string name="Earnings_per_share">Earnings er share</string>
+    <string name="Earnings_per_share">Earnings per share</string>
     <string name="Current_yield">Current yield</string>
+    <string name="Number_of_shares_traded_today">Number of shares traded today</string>
+    <string name="Price_of_a_stock_divided_by_earnings_per_share">Price of a stock divided by earnings per share</string>
+    <string name="Portion_of_a_company_s_profit_allocated_to_each_outstanding_share_of_common_stock">Portion of a company\'s profit allocated to each outstanding share of common stock</string>
+    <string name="Annual_dividends_divided_by_current_stock_price">Annual dividends divided by current stock price</string>
+    <string name="Estimated_value_of_the_common_equity">Estimated value of the common equity</string>
+    <string name="Previous_trading_day_s_last_reported_trade_price">Previous trading day\'s last reported trade price</string>
+    <string name="Opening_price">Opening price</string>
+    <string name="Average_share_volume_for_the_past_50_trading_days">Average share volume for the past 50 trading days</string>
 </resources>

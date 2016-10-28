@@ -25,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     boolean searchopened = false;
     static ImageView imageView;
     public static CollapsingToolbarLayout collapsingToolbar;
+    public static ArrayList<String> portfolioStocksArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             imageView = (ImageView) findViewById(R.id.backdrop);
             disableCollapse();
             fab = (FloatingActionButton) findViewById(R.id.fab);
+            final String portfolioStocks[] = SaveSharedPreference.getPortfolioStocks(this);
+            Collections.addAll(portfolioStocksArray, portfolioStocks);
         }
     }
 

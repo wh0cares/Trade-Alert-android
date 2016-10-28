@@ -203,6 +203,8 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                     error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
                 }
+                MainActivity.portfolioStocksArray.remove(stockSymbol);
+                SaveSharedPreference.setPortfolioStocks(getActivity(), MainActivity.portfolioStocksArray.toArray(new String[0]));
             }
         });
     }

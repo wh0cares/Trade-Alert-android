@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,6 +72,11 @@ public class DetailFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setIndeterminate(true);
         pDialog.setCanceledOnTouchOutside(false);
+        if(contains(MainActivity.portfolioStocksArray.toArray(new String[0]), stockSymbol)){
+            MainActivity.fab.setEnabled(false);
+        }else{
+            MainActivity.fab.setEnabled(true);
+        }
         MainActivity.fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -85,6 +92,15 @@ public class DetailFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean contains(String[] a, String b) {
+        for (String c : a) {
+            if (b.equals(c)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void toolbar() {
@@ -105,6 +121,8 @@ public class DetailFragment extends Fragment {
     }
 
     public void getStockRealtime(String symbol) throws Exception {
+        pDialog.setMessage("Getting realtime stock data");
+        pDialog.show();
         Request request = new Request.Builder()
                 .url(getString(R.string.realtime_url).replaceAll(":symbol", symbol).replaceAll(":index", "NASDAQ"))
                 .addHeader("x-access-token", SaveSharedPreference.getToken(getActivity()))
@@ -125,18 +143,18 @@ public class DetailFragment extends Fragment {
                     JSONObject obj = new JSONObject(response.body().string());
                     JSONArray dataArray = obj.getJSONArray("data");
                     JSONObject dataArrayObj = dataArray.getJSONObject(0);
-                    final String open = dataArrayObj.getString("open");
-                    final String prevClose = dataArrayObj.getString("prevClose");
-                    final String volume = dataArrayObj.getString("volume");
-                    final String avgVolume50Day = dataArrayObj.getString("avgVolume50Day");
-                    final String marketCap = dataArrayObj.getString("marketCap");
-                    final String peRatio = dataArrayObj.getString("peRatio");
-                    final String eps = dataArrayObj.getString("eps");
-                    final String currentYield = dataArrayObj.getString("currentYield");
+                    final double open = dataArrayObj.getDouble("open");
+                    final double prevClose = dataArrayObj.getDouble("prevClose");
+                    final double volume = dataArrayObj.getDouble("volume");
+                    final double avgVolume50Day = dataArrayObj.getDouble("avgVolume50Day");
+                    final double marketCap = dataArrayObj.getDouble("marketCap");
+                    final double peRatio = dataArrayObj.getDouble("peRatio");
+                    final double eps = dataArrayObj.getDouble("eps");
+                    final double currentYield = dataArrayObj.getDouble("currentYield");
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             pDialog.dismiss();
-                            displayData(new String[]{open, prevClose, volume, avgVolume50Day, marketCap, peRatio, eps, currentYield});
+                            displayData(new double[]{open, prevClose, volume, avgVolume50Day, marketCap, peRatio, eps, currentYield});
                             response.body().close();
                         }
                     });
@@ -148,15 +166,16 @@ public class DetailFragment extends Fragment {
         });
     }
 
-    private void displayData(String[] data) {
-        open.setText(data[0]);
-        prevClose.setText(data[1]);
-        volume.setText(data[2]);
-        volume50avg.setText(data[3]);
-        marketCap.setText(data[4]);
-        peRatio.setText(data[5]);
-        eps.setText(data[6]);
-        currentYield.setText(data[7]);
+    private void displayData(double[] data) {
+        NumberFormat nm = NumberFormat.getCurrencyInstance();
+        open.setText(nm.format(data[0]));
+        prevClose.setText(nm.format(data[1]));
+        volume.setText(nm.format(data[2]));
+        volume50avg.setText(nm.format(data[3]));
+        marketCap.setText(nm.format(data[4]));
+        peRatio.setText(String.valueOf(data[5]));
+        eps.setText(nm.format(data[6]));
+        currentYield.setText(String.format("%s%%", data[7]));
     }
 
     public void addToPorfolio(final String symbol) throws Exception {
@@ -181,7 +200,9 @@ public class DetailFragment extends Fragment {
                 }
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getActivity(), "Added " + symbol + " to porfolio", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Added " + toolbarTitle + " to porfolio", Toast.LENGTH_LONG).show();
+                        MainActivity.portfolioStocksArray.add(symbol);
+                        SaveSharedPreference.setPortfolioStocks(getActivity(), MainActivity.portfolioStocksArray.toArray(new String[0]));
                     }
                 });
             }
@@ -211,11 +232,6 @@ public class DetailFragment extends Fragment {
                     }
                     throw new IOException("Unexpected code " + response.body());
                 }
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        pDialog.dismiss();
-                    }
-                });
             }
         });
     }
