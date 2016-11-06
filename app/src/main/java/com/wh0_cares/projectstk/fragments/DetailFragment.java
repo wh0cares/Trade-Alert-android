@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +15,8 @@ import android.widget.Toast;
 
 import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.activities.MainActivity;
+import com.wh0_cares.projectstk.database.DatabaseHandler;
+import com.wh0_cares.projectstk.database.Stocks;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 
 import org.json.JSONArray;
@@ -56,7 +57,7 @@ public class DetailFragment extends Fragment {
     TextView eps;
     @Bind(R.id.currentYield_value)
     TextView currentYield;
-
+    DatabaseHandler db;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -72,7 +73,8 @@ public class DetailFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setIndeterminate(true);
         pDialog.setCanceledOnTouchOutside(false);
-        if(contains(MainActivity.portfolioStocksArray.toArray(new String[0]), stockSymbol)){
+        db = new DatabaseHandler(getActivity());
+        if(db.getStock(stockSymbol)){
             MainActivity.fab.setEnabled(false);
         }else{
             MainActivity.fab.setEnabled(true);
@@ -148,13 +150,17 @@ public class DetailFragment extends Fragment {
                     final double volume = dataArrayObj.getDouble("volume");
                     final double avgVolume50Day = dataArrayObj.getDouble("avgVolume50Day");
                     final double marketCap = dataArrayObj.getDouble("marketCap");
-                    final double peRatio = dataArrayObj.getDouble("peRatio");
+                    String peRatio = dataArrayObj.getString("peRatio");
+                    if(peRatio.equalsIgnoreCase("NE")){
+                        peRatio = "0";
+                    }
                     final double eps = dataArrayObj.getDouble("eps");
                     final double currentYield = dataArrayObj.getDouble("currentYield");
+                    final String finalPeRatio = peRatio;
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             pDialog.dismiss();
-                            displayData(new double[]{open, prevClose, volume, avgVolume50Day, marketCap, peRatio, eps, currentYield});
+                            displayData(new double[]{open, prevClose, volume, avgVolume50Day, marketCap, Double.parseDouble(finalPeRatio), eps, currentYield});
                             response.body().close();
                         }
                     });
@@ -201,8 +207,7 @@ public class DetailFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(getActivity(), "Added " + toolbarTitle + " to porfolio", Toast.LENGTH_LONG).show();
-                        MainActivity.portfolioStocksArray.add(symbol);
-                        SaveSharedPreference.setPortfolioStocks(getActivity(), MainActivity.portfolioStocksArray.toArray(new String[0]));
+                        db.addStock(new Stocks(symbol));
                     }
                 });
             }
@@ -257,10 +262,6 @@ public class DetailFragment extends Fragment {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response.body());
                 }
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                        }
-                    });
             }
         });
     }

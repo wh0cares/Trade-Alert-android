@@ -15,9 +15,9 @@ import android.widget.ImageView;
 
 import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
+import com.wh0_cares.projectstk.alarm.AlarmReceiver;
 import com.wh0_cares.projectstk.fragments.DetailFragment;
 import com.wh0_cares.projectstk.fragments.PortfolioFragment;
-import com.wh0_cares.projectstk.utils.AlarmManager;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 import com.wh0_cares.projectstk.utils.SearchBox;
 
@@ -26,8 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     boolean searchopened = false;
     static ImageView imageView;
     public static CollapsingToolbarLayout collapsingToolbar;
-    public static ArrayList<String> portfolioStocksArray = new ArrayList<>();
+    AlarmReceiver alarm = new AlarmReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +68,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             imageView = (ImageView) findViewById(R.id.backdrop);
             disableCollapse();
             fab = (FloatingActionButton) findViewById(R.id.fab);
-            final String portfolioStocks[] = SaveSharedPreference.getPortfolioStocks(this);
-            Collections.addAll(portfolioStocksArray, portfolioStocks);
-            AlarmManager.start(this);
+            alarm.setAlarm(this);
         }
     }
 

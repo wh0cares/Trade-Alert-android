@@ -27,6 +27,7 @@
     <string name="signup_url">http://192.168.1.18:3000/api/users/register/</string>
     <string name="portfolio_url">http://192.168.1.18:3000/api/users/portfolio/</string>
     <string name="realtime_url">http://192.168.1.18:3000/api/stocks/:symbol/:index/realtime</string>
+    <string name="realtime_volume_url">http://192.168.1.18:3000/api/stocks/:symbol/volume</string>
     <string name="checkDatabase_url">http://192.168.1.18:3000/api/stocks/:symbol/</string>
     <string name="addToDatabase_url">http://192.168.1.18:3000/api/stocks/</string>
 

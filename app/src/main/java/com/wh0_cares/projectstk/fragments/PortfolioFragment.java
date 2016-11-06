@@ -22,6 +22,8 @@ import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.activities.MainActivity;
 import com.wh0_cares.projectstk.adapters.PortfolioAdapter;
 import com.wh0_cares.projectstk.data.PortfolioData;
+import com.wh0_cares.projectstk.database.DatabaseHandler;
+import com.wh0_cares.projectstk.database.Stocks;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 
 import org.json.JSONArray;
@@ -48,6 +50,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
     SwipeRefreshLayout refresh;
     private ArrayList<PortfolioData> stocks;
     PortfolioAdapter adapter;
+    DatabaseHandler db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -171,6 +174,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(rv);
+        db = new DatabaseHandler(getActivity());
     }
 
     public void toolbar() {
@@ -203,8 +207,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                     error(getString(R.string.Error_getting_data));
                     throw new IOException("Unexpected code " + response.body());
                 }
-                MainActivity.portfolioStocksArray.remove(stockSymbol);
-                SaveSharedPreference.setPortfolioStocks(getActivity(), MainActivity.portfolioStocksArray.toArray(new String[0]));
+                db.deleteStock(new Stocks(stockSymbol));
             }
         });
     }
@@ -243,7 +246,9 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         stock.setIndex(index);
                         stock.setSymbol(symbol);
                         stocks.add(stock);
-
+                        if(!db.getStock(symbol)){
+                            db.addStock(new Stocks(symbol));
+                        }
                     }
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
