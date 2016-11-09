@@ -245,6 +245,11 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         String index = item.getString("index");
                         String symbol = item.getString("symbol");
                         JSONArray datesArray = item.getJSONArray("dates");
+                        JSONArray volumesArray = item.getJSONArray("volumes");
+                        int volAvg = 0;
+                        for (int a = 0; a < volumesArray.length(); a++) {
+                            volAvg += volumesArray.getInt(a);
+                        }
                         String lastDate = datesArray.getString(0);
                         PortfolioData stock = new PortfolioData();
                         stock.setFirstLetter(firstLetter);
@@ -264,7 +269,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                                 if (c.after(c2.getTime())){
                                     //TODO update database
                                 }else{
-                                    db.addStock(new Stocks(symbol, nextUpdate));
+                                    db.addStock(new Stocks(symbol, nextUpdate, volAvg));
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             imageView = (ImageView) findViewById(R.id.backdrop);
             disableCollapse();
             fab = (FloatingActionButton) findViewById(R.id.fab);
-            alarm.setAlarm(this);
+//            alarm.setAlarm(this);
         }
     }
 

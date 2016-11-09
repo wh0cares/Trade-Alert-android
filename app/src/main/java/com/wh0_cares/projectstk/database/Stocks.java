@@ -5,6 +5,7 @@ public class Stocks {
     private int id;
     private String symbol;
     private String nextUpdate;
+    private int volAvg;
 
     public Stocks(){
     }
@@ -15,9 +16,10 @@ public class Stocks {
 //        this.nextUpdate = nextUpdate;
 //    }
 
-    public Stocks(String symbol, String nextUpdate){
+    public Stocks(String symbol, String nextUpdate, int volAvg){
         this.symbol = symbol;
         this.nextUpdate = nextUpdate;
+        this.volAvg = volAvg;
     }
 
     public Stocks(String symbol) {
@@ -46,6 +48,14 @@ public class Stocks {
 
     public void setNextUpdate(String nextUpdate){
         this.nextUpdate = nextUpdate;
+    }
+
+    public int getVolAvg(){
+        return this.volAvg;
+    }
+
+    public void setVolAvg(int volAvg){
+        this.volAvg = volAvg;
     }
 
 

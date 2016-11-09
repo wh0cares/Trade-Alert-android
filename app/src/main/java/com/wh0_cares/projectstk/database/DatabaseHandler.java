@@ -18,6 +18,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_SYMBOL = "symbol";
     private static final String KEY_NEXTUPDATE = "next_update";
+    private static final String KEY_VOLAVG = "volume_adverage";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_STOCKS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_SYMBOL + " TEXT,"
+                + KEY_VOLAVG + " INTEGER,"
                 + KEY_NEXTUPDATE + " TEXT"
                 + ")";
         db.execSQL(CREATE_TABLE);
@@ -44,6 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_SYMBOL, stock.getSymbol());
+        values.put(KEY_VOLAVG, stock.getVolAvg());
         values.put(KEY_NEXTUPDATE, stock.getNextUpdate());
 
         db.insert(TABLE_STOCKS, null, values);

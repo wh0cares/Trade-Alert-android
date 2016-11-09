@@ -62,6 +62,7 @@ public class DetailFragment extends Fragment {
     TextView currentYield;
     DatabaseHandler db;
     String lastDate;
+    int volAvg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -214,7 +215,7 @@ public class DetailFragment extends Fragment {
                             if (c.after(c2.getTime())){
                                 //TODO update database
                             }else{
-                                db.addStock(new Stocks(symbol, nextUpdate));
+                                db.addStock(new Stocks(symbol, nextUpdate, volAvg));
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -251,6 +252,11 @@ public class DetailFragment extends Fragment {
                         JSONObject obj = new JSONObject(response.body().string());
                         JSONObject dataObj = obj.getJSONObject("data");
                         JSONArray datesArray = dataObj.getJSONArray("dates");
+                        JSONArray volumesArray = dataObj.getJSONArray("volumes");
+                        volAvg = 0;
+                        for (int a = 0; a < volumesArray.length(); a++) {
+                            volAvg += volumesArray.getInt(a);
+                        }
                         lastDate = datesArray.getString(0);
                     } catch (JSONException e) {
                         e.printStackTrace();
