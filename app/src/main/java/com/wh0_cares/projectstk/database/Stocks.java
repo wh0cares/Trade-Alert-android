@@ -4,16 +4,23 @@ public class Stocks {
 
     private int id;
     private String symbol;
+    private String nextUpdate;
 
     public Stocks(){
     }
 
-    public Stocks(int id, String symbol){
-        this.id = id;
+//    public Stocks(int id, String symbol, String nextUpdate){
+//        this.id = id;
+//        this.symbol = symbol;
+//        this.nextUpdate = nextUpdate;
+//    }
+
+    public Stocks(String symbol, String nextUpdate){
         this.symbol = symbol;
+        this.nextUpdate = nextUpdate;
     }
 
-    public Stocks(String symbol){
+    public Stocks(String symbol) {
         this.symbol = symbol;
     }
 
@@ -32,4 +39,14 @@ public class Stocks {
     public void setSymbol(String symbol){
         this.symbol = symbol;
     }
+
+    public String getNextUpdate(){
+        return this.nextUpdate;
+    }
+
+    public void setNextUpdate(String nextUpdate){
+        this.nextUpdate = nextUpdate;
+    }
+
+
 }

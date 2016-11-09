@@ -25,6 +25,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,6 +61,8 @@ public class DetailFragment extends Fragment {
     @Bind(R.id.currentYield_value)
     TextView currentYield;
     DatabaseHandler db;
+    String lastDate;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -74,10 +79,16 @@ public class DetailFragment extends Fragment {
         pDialog.setIndeterminate(true);
         pDialog.setCanceledOnTouchOutside(false);
         db = new DatabaseHandler(getActivity());
-        if(db.getStock(stockSymbol)){
+        if (db.getStock(stockSymbol)) {
             MainActivity.fab.setEnabled(false);
-        }else{
+        } else {
             MainActivity.fab.setEnabled(true);
+        }
+        try {
+            getStockRealtime(stockSymbol);
+            checkDatabase(stockSymbol);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         MainActivity.fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -88,21 +99,6 @@ public class DetailFragment extends Fragment {
                 }
             }
         });
-        try {
-            getStockRealtime(stockSymbol);
-            checkDatabase(stockSymbol);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static boolean contains(String[] a, String b) {
-        for (String c : a) {
-            if (b.equals(c)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void toolbar() {
@@ -151,7 +147,7 @@ public class DetailFragment extends Fragment {
                     final double avgVolume50Day = dataArrayObj.getDouble("avgVolume50Day");
                     final double marketCap = dataArrayObj.getDouble("marketCap");
                     String peRatio = dataArrayObj.getString("peRatio");
-                    if(peRatio.equalsIgnoreCase("NE")){
+                    if (peRatio.equalsIgnoreCase("NE")) {
                         peRatio = "0";
                     }
                     final double eps = dataArrayObj.getDouble("eps");
@@ -206,8 +202,23 @@ public class DetailFragment extends Fragment {
                 }
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getActivity(), "Added " + toolbarTitle + " to porfolio", Toast.LENGTH_LONG).show();
-                        db.addStock(new Stocks(symbol));
+                        try {
+                            Toast.makeText(getActivity(), "Added " + toolbarTitle + " to porfolio", Toast.LENGTH_LONG).show();
+                            SimpleDateFormat sdfOld = new SimpleDateFormat("MMM dd, yyyy");
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+                            Calendar c = Calendar.getInstance();
+                            Calendar c2 = Calendar.getInstance();
+                            c.setTime(sdfOld.parse(String.valueOf(lastDate)));
+                            c.add(Calendar.DATE, 30);
+                            String nextUpdate = sdf.format(c.getTime());
+                            if (c.after(c2.getTime())){
+                                //TODO update database
+                            }else{
+                                db.addStock(new Stocks(symbol, nextUpdate));
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
@@ -235,7 +246,15 @@ public class DetailFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    throw new IOException("Unexpected code " + response.body());
+                } else {
+                    try {
+                        JSONObject obj = new JSONObject(response.body().string());
+                        JSONObject dataObj = obj.getJSONObject("data");
+                        JSONArray datesArray = dataObj.getJSONArray("dates");
+                        lastDate = datesArray.getString(0);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

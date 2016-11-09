@@ -31,7 +31,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -160,7 +164,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         c.drawBitmap(bitmap, 96f, (float) itemView.getTop() + height, null);
 
                     } else { //swiping left
-                        translationX = Math.max(dX, (-1)* viewHolder.itemView.getWidth() / 6);
+                        translationX = Math.max(dX, (-1) * viewHolder.itemView.getWidth() / 6);
                         paint.setColor(getResources().getColor(R.color.red));
                         bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_delete);
                         float height = (itemView.getHeight() / 2) - (bitmap.getHeight() / 2);
@@ -240,14 +244,31 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         String name = item.getString("name");
                         String index = item.getString("index");
                         String symbol = item.getString("symbol");
+                        JSONArray datesArray = item.getJSONArray("dates");
+                        String lastDate = datesArray.getString(0);
                         PortfolioData stock = new PortfolioData();
                         stock.setFirstLetter(firstLetter);
                         stock.setName(name);
                         stock.setIndex(index);
                         stock.setSymbol(symbol);
                         stocks.add(stock);
-                        if(!db.getStock(symbol)){
-                            db.addStock(new Stocks(symbol));
+                        if (!db.getStock(symbol)) {
+                            try {
+                                SimpleDateFormat sdfOld = new SimpleDateFormat("MMM dd, yyyy");
+                                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+                                Calendar c = Calendar.getInstance();
+                                Calendar c2 = Calendar.getInstance();
+                                c.setTime(sdfOld.parse(String.valueOf(lastDate)));
+                                c.add(Calendar.DATE, 30);
+                                String nextUpdate = sdf.format(c.getTime());
+                                if (c.after(c2.getTime())){
+                                    //TODO update database
+                                }else{
+                                    db.addStock(new Stocks(symbol, nextUpdate));
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     getActivity().runOnUiThread(new Runnable() {
