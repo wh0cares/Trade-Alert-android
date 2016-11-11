@@ -88,8 +88,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_SYMBOL, stock.getSymbol());
+        values.put(KEY_VOLAVG, stock.getVolAvg());
+        values.put(KEY_NEXTUPDATE, stock.getNextUpdate());
 
-        return db.update(TABLE_STOCKS, values, KEY_ID + " = ?", new String[]{String.valueOf(stock.getID())});
+        return db.update(TABLE_STOCKS, values, KEY_SYMBOL + " = ?", new String[]{String.valueOf(stock.getSymbol())});
     }
 
     public void deleteStock(Stocks stock) {

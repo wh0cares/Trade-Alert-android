@@ -250,6 +250,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         for (int a = 0; a < volumesArray.length(); a++) {
                             volAvg += volumesArray.getInt(a);
                         }
+                        volAvg = volAvg / 30;
                         String lastDate = datesArray.getString(0);
                         PortfolioData stock = new PortfolioData();
                         stock.setFirstLetter(firstLetter);
@@ -262,15 +263,15 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                                 SimpleDateFormat sdfOld = new SimpleDateFormat("MMM dd, yyyy");
                                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
                                 Calendar c = Calendar.getInstance();
-                                Calendar c2 = Calendar.getInstance();
+//                                Calendar c2 = Calendar.getInstance();
                                 c.setTime(sdfOld.parse(String.valueOf(lastDate)));
                                 c.add(Calendar.DATE, 30);
                                 String nextUpdate = sdf.format(c.getTime());
-                                if (c.after(c2.getTime())){
-                                    //TODO update database
-                                }else{
-                                    db.addStock(new Stocks(symbol, nextUpdate, volAvg));
-                                }
+//                                if (c.after(c2.getTime())){
+//                                    //TODO update database
+//                                }else{
+                                db.addStock(new Stocks(symbol, nextUpdate, volAvg));
+//                                }
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
