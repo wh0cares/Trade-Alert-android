@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_SYMBOL = "symbol";
     private static final String KEY_NEXTUPDATE = "next_update";
-    private static final String KEY_VOLAVG = "volume_adverage";
+    private static final String KEY_VOLAVG = "volume_average";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -77,6 +78,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Stocks stock = new Stocks();
                 stock.setID(Integer.parseInt(cursor.getString(0)));
                 stock.setSymbol(cursor.getString(1));
+                stock.setVolAvg(cursor.getInt(2));
+                stock.setNextUpdate(cursor.getString(3));
                 stockList.add(stock);
             } while (cursor.moveToNext());
         }
@@ -98,6 +101,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STOCKS, KEY_SYMBOL + " = ?", new String[]{String.valueOf(stock.getSymbol())});
         db.close();
+    }
+
+    public void deleteDatabase(Context context) {
+        File file = context.getDatabasePath(DATABASE_NAME);
+        SQLiteDatabase.deleteDatabase(file);
     }
 
     public int getStocksCount() {

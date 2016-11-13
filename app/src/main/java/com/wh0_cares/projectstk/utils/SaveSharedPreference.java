@@ -12,6 +12,7 @@ public class SaveSharedPreference {
     */
     static final String prefAccessToken = "access-token";
     static final String prefSetup = "setup";
+    static final String prefTempStocks = "temp-stocks";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -43,5 +44,21 @@ public class SaveSharedPreference {
         Editor editor = getSharedPreferences(ctx).edit();
         editor.clear();
         editor.commit();
+    }
+
+    public static void setTempStocks(Context ctx, String[] array) {
+        Editor editor = getSharedPreferences(ctx).edit();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            sb.append(array[i]).append(",");
+        }
+        editor.putString(prefTempStocks, sb.toString());
+        editor.commit();
+    }
+
+    public static String[] getTempStocks(Context ctx){
+        final String tempStocks = getSharedPreferences(ctx).getString(prefTempStocks, "");
+        String[] tempStocksArray = tempStocks.split(",");
+        return tempStocksArray;
     }
 }

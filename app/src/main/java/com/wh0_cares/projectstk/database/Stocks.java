@@ -10,12 +10,6 @@ public class Stocks {
     public Stocks(){
     }
 
-//    public Stocks(int id, String symbol, String nextUpdate){
-//        this.id = id;
-//        this.symbol = symbol;
-//        this.nextUpdate = nextUpdate;
-//    }
-
     public Stocks(String symbol, String nextUpdate, int volAvg){
         this.symbol = symbol;
         this.nextUpdate = nextUpdate;

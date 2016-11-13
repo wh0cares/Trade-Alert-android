@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class AlarmService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         DatabaseHandler db = new DatabaseHandler(this);
         List<Stocks> stocks = db.getAllStocks();
+        ArrayList<String> tempStocks = new ArrayList<>();
         for (Stocks stock : stocks) {
             try {
-                //TODO compare realtime volume
                 Calendar c = Calendar.getInstance();
                 Calendar c2 = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
@@ -61,16 +62,20 @@ public class AlarmService extends Service {
                     volAvg = stock.getVolAvg();
                 }
                 getStockRealtimeVolume(stock.getSymbol());
-                int digitsLength = (int)(Math.log10(realtimeVol/2));
+                int digitsLength = (int)(Math.log10(volAvg));
                 String compare = String.format("%0"+digitsLength+"d", 1);
-                if(Integer.parseInt(compare) > realtimeVol){
-                    //TODO add all stocks that are greater then to an array then send notification
+                if(Integer.parseInt(compare) + volAvg <= realtimeVol){
+                    tempStocks.add(stock.getSymbol());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
+        SaveSharedPreference.setTempStocks(getApplicationContext(), tempStocks.toArray(new String[0]));
+//        if(tempStocks.size() != 0){
+            sendNotification(tempStocks.size());
+//        }
         AlarmReceiver.completeWakefulIntent(intent);
         return START_REDELIVER_INTENT;
     }
@@ -151,17 +156,19 @@ public class AlarmService extends Service {
         });
     }
 
-    private void sendNotification(String msg) {
+    private void sendNotification(int count) {
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
 
+        String message = getString(R.string.notification_message).replaceAll("\\{COUNT\\}", String.valueOf(count));
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Test Title")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                        .setContentText(msg);
+                        .setContentTitle(getString(R.string.app_name))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .setContentText(message);
 
         builder.setContentIntent(contentIntent);
         notificationManager.notify(0, builder.build());

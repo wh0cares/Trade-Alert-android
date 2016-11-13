@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
 import com.wh0_cares.projectstk.alarm.AlarmReceiver;
+import com.wh0_cares.projectstk.database.DatabaseHandler;
 import com.wh0_cares.projectstk.fragments.DetailFragment;
 import com.wh0_cares.projectstk.fragments.PortfolioFragment;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             imageView = (ImageView) findViewById(R.id.backdrop);
             disableCollapse();
             fab = (FloatingActionButton) findViewById(R.id.fab);
-//            alarm.setAlarm(this);
+            alarm.setAlarm(this);
         }
     }
 
@@ -106,7 +107,9 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                 return false;
             }
             case R.id.signout: {
+                DatabaseHandler db = new DatabaseHandler(this);
                 SaveSharedPreference.clearData(this);
+                db.deleteDatabase(this);
                 Intent intent = new Intent(MainActivity.this, SignupLoginActivity.class);
                 startActivity(intent);
                 finish();
