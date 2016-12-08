@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.SignupLoginActivity" android:theme="@style/AppTheme.Transparent"/>
+        <activity android:name=".activities.DetailActivity" android:theme="@style/AppTheme"/>
         <receiver android:name=".alarm.AlarmReceiver" />
         <receiver android:name=".alarm.BootReceiver" android:enabled="false">
             <intent-filter>

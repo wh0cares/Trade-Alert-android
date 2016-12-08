@@ -1,5 +1,6 @@
 package com.wh0_cares.projectstk.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.wh0_cares.projectstk.R;
+import com.wh0_cares.projectstk.activities.DetailActivity;
 import com.wh0_cares.projectstk.activities.MainActivity;
 import com.wh0_cares.projectstk.adapters.PortfolioAdapter;
 import com.wh0_cares.projectstk.data.PortfolioData;
@@ -64,7 +66,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        toolbar();
         refresh.setOnRefreshListener(this);
         refresh.setColorSchemeResources(R.color.colorPrimary);
         refresh.post(new Runnable() {
@@ -89,15 +90,10 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(final View view, final int position) {
                 PortfolioData stock = stocks.get(position);
-                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment fr = new DetailFragment();
-                Bundle args = new Bundle();
-                args.putString("symbol", stock.getSymbol());
-                args.putString("title", stock.getSymbol() + " - " + stock.getName());
-                fr.setArguments(args);
-                ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
-                ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
-                ft.commit();
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("symbol", stock.getSymbol());
+                intent.putExtra("title", stock.getSymbol() + " - " + stock.getName());
+                startActivity(intent);
             }
 
             @Override
@@ -179,17 +175,6 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
         ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(rv);
         db = new DatabaseHandler(getActivity());
-    }
-
-    public void toolbar() {
-        getActivity().setTitle(getString(R.string.Portfolio));
-        MainActivity.disableCollapse();
-        if (Build.VERSION.SDK_INT >= 21) {
-            float scale = getResources().getDisplayMetrics().density;
-            int px = (int) (6 * scale + 0.5f);
-            View toolbar = getActivity().findViewById(R.id.toolbar);
-            toolbar.setElevation(px);
-        }
     }
 
     public void removeFromPortfolio(final String stockSymbol, final int stockPosition) throws Exception {

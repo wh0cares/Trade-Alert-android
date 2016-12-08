@@ -2,25 +2,20 @@ package com.wh0_cares.projectstk.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.projectstk.R;
+import com.wh0_cares.projectstk.adapters.ViewPagerAdapter;
 import com.wh0_cares.projectstk.alarm.AlarmReceiver;
 import com.wh0_cares.projectstk.database.DatabaseHandler;
-import com.wh0_cares.projectstk.fragments.DetailFragment;
-import com.wh0_cares.projectstk.fragments.PortfolioFragment;
 import com.wh0_cares.projectstk.utils.SaveSharedPreference;
 import com.wh0_cares.projectstk.utils.SearchBox;
+import com.wh0_cares.projectstk.utils.SlidingTabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,12 +36,16 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     private final OkHttpClient client = new OkHttpClient();
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    public static FloatingActionButton fab;
     SearchBox search;
     boolean searchopened = false;
-    static ImageView imageView;
-    public static CollapsingToolbarLayout collapsingToolbar;
     AlarmReceiver alarm = new AlarmReceiver();
+
+    ViewPager pager;
+    ViewPagerAdapter adapter;
+    SlidingTabLayout tabs;
+    CharSequence Titles[];
+    int Numboftabs = 2;
+    MenuItem[] items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +59,22 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             setContentView(R.layout.activity_main);
             ButterKnife.bind(this);
             setSupportActionBar(toolbar);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, new PortfolioFragment(), getString(R.string.Portfolio)).addToBackStack(getString(R.string.Portfolio));
-            ft.commit();
             search = (SearchBox) findViewById(R.id.searchbox);
             setUpSearch();
-            collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-            imageView = (ImageView) findViewById(R.id.backdrop);
-            disableCollapse();
-            fab = (FloatingActionButton) findViewById(R.id.fab);
-            alarm.setAlarm(this);
+            Titles = new CharSequence[]{getString(R.string.Portfolio), "Temp Fragment"};
+            adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+            pager = (ViewPager) findViewById(R.id.pager);
+            pager.setAdapter(adapter);
+            tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+            tabs.setDistributeEvenly(true);
+            tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+                @Override
+                public int getIndicatorColor(int position) {
+                    return getResources().getColor(R.color.colorAccent);
+                }
+            });
+            tabs.setViewPager(pager);
+//            alarm.setAlarm(this);
         }
     }
 
@@ -82,11 +87,15 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     private void openSearch() {
         search.revealFromMenuItem(R.id.search, this);
-        toolbar.setVisibility(View.GONE);
+        for (MenuItem item : items){
+            item.setVisible(false);
+        }
     }
 
     private void closeSearch() {
-        toolbar.setVisibility(View.VISIBLE);
+        for (MenuItem item : items){
+            item.setVisible(true);
+        }
         search.hideCircularly(MainActivity.this);
         search.setSearchString("");
         search.clearSearchable();
@@ -96,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        items = new MenuItem[]{menu.getItem(0), menu.getItem(1)};
         return true;
     }
 
@@ -127,13 +137,11 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             search.toggleSearch();
             searchopened = false;
         } else {
-            PortfolioFragment pf = (PortfolioFragment) getSupportFragmentManager().findFragmentByTag(getString(R.string.Portfolio));
-            if (pf != null && pf.isVisible()) {
+            if(pager.getCurrentItem() == 0) {
                 finish();
+            }else if (pager.getCurrentItem() == 1){
+                pager.setCurrentItem(0);
             }
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            getSupportFragmentManager().popBackStack();
-            ft.setCustomAnimations(R.anim.back1, R.anim.back2);
         }
     }
 
@@ -166,16 +174,6 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         }
     }
 
-    public static void disableCollapse() {
-        imageView.setVisibility(View.GONE);
-        collapsingToolbar.setTitleEnabled(false);
-    }
-
-    public static void enableCollapse() {
-        imageView.setVisibility(View.VISIBLE);
-        collapsingToolbar.setTitleEnabled(true);
-    }
-
     @Override
     public void onSearch(String s) {
 //        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -193,18 +191,13 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 
     @Override
     public void onResultClick(SearchResult s) {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment fr = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString("symbol", String.valueOf(s).substring(0, String.valueOf(s).indexOf(" - ")));
-        args.putString("title", String.valueOf(s));
-        fr.setArguments(args);
-        ft.setCustomAnimations(R.anim.fragment1, R.anim.fragment2);
-        ft.replace(R.id.container, fr).addToBackStack(getString(R.string.Details));
-        ft.commit();
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra("symbol", String.valueOf(s).substring(0, String.valueOf(s).indexOf(" - ")));
+        intent.putExtra("title", String.valueOf(s));
         search.setSearchString("");
         search.clearSearchable();
         search.clearResults();
+        startActivity(intent);
     }
 
     public void searchSymbol(String symbol) throws Exception {
