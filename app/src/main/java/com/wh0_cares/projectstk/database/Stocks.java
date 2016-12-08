@@ -4,10 +4,15 @@ public class Stocks {
 
     private int id;
     private String symbol;
+    private String name;
+    private String index;
     private String nextUpdate;
     private int volAvg;
 
-    public Stocks(){
+    public Stocks(String symbol, String name, String index){
+        this.symbol = symbol;
+        this.name = name;
+        this.index = index;
     }
 
     public Stocks(String symbol, String nextUpdate, int volAvg){
@@ -18,6 +23,9 @@ public class Stocks {
 
     public Stocks(String symbol) {
         this.symbol = symbol;
+    }
+
+    public Stocks() {
     }
 
     public int getID(){
@@ -50,6 +58,22 @@ public class Stocks {
 
     public void setVolAvg(int volAvg){
         this.volAvg = volAvg;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getIndex(){
+        return this.index;
+    }
+
+    public void setIndex(String index){
+        this.index = index;
     }
 
 

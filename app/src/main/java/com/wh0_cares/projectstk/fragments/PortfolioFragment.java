@@ -100,7 +100,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             public void onLongClick(View view, int position) {
             }
         }));
-        ItemTouchHelper.SimpleCallback touchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback touchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -243,7 +243,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
                         stock.setIndex(index);
                         stock.setSymbol(symbol);
                         stocks.add(stock);
-                        if (!db.getStock(symbol)) {
+                        if (!db.hasStock(symbol)) {
                             try {
                                 SimpleDateFormat sdfOld = new SimpleDateFormat("MMM dd, yyyy");
                                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");

@@ -1,0 +1,113 @@
+package com.wh0_cares.projectstk.adapters;
+
+import android.content.Context;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.wh0_cares.projectstk.R;
+import com.wh0_cares.projectstk.data.TempData;
+
+import java.util.List;
+
+public class TempAdapter extends RecyclerView.Adapter<TempAdapter.MyViewHolder> {
+
+    private List<TempData> stocks;
+    private Context mContext;
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public CardView cv;
+        public TextView stockImage;
+        public TextView stockName;
+        public TextView stockIndexSymbol;
+
+        public MyViewHolder(View view) {
+            super(view);
+            cv = (CardView)view.findViewById(R.id.CardView_stock);
+            stockImage = (TextView)view.findViewById(R.id.stock_image);
+            stockName = (TextView)view.findViewById(R.id.stock_name);
+            stockIndexSymbol = (TextView)view.findViewById(R.id.stock_index_symnol);
+        }
+    }
+
+
+    public TempAdapter(Context context, List<TempData> stocks) {
+        mContext = context;
+        this.stocks = stocks;
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.cardview_temp, parent, false);
+
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        final TempData stock = stocks.get(position);
+        holder.stockImage.setText(stock.getFirstLetter());
+        holder.stockName.setText(stock.getName());
+        holder.stockIndexSymbol.setText(stock.getIndex() + " - " + stock.getSymbol());
+
+    }
+    @Override
+    public int getItemCount() {
+        return stocks.size();
+    }
+
+    public interface ClickListener {
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
+    }
+
+    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+        private GestureDetector gestureDetector;
+        private TempAdapter.ClickListener clickListener;
+
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final TempAdapter.ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                clickListener.onClick(child, rv.getChildPosition(child));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    }
+}

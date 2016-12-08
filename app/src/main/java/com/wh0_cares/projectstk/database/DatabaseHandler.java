@@ -18,6 +18,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String KEY_ID = "id";
     private static final String KEY_SYMBOL = "symbol";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_INDEX = "stock_index";
     private static final String KEY_NEXTUPDATE = "next_update";
     private static final String KEY_VOLAVG = "volume_average";
 
@@ -30,6 +32,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_STOCKS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_SYMBOL + " TEXT,"
+                + KEY_NAME + " TEXT,"
+                + KEY_INDEX + " TEXT,"
                 + KEY_VOLAVG + " INTEGER,"
                 + KEY_NEXTUPDATE + " TEXT"
                 + ")";
@@ -47,6 +51,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_SYMBOL, stock.getSymbol());
+        values.put(KEY_NAME, stock.getName());
+        values.put(KEY_INDEX, stock.getIndex());
         values.put(KEY_VOLAVG, stock.getVolAvg());
         values.put(KEY_NEXTUPDATE, stock.getNextUpdate());
 
@@ -54,7 +60,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean getStock(String symbol) {
+    public boolean hasStock(String symbol) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_STOCKS, new String[]{
@@ -64,6 +70,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{symbol}, null, null, null, null);
         return cursor.moveToFirst();
     }
+
+    public Stocks getStock(String symbol) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_STOCKS, new String[]{
+                KEY_SYMBOL,
+                KEY_NAME,
+                KEY_INDEX,
+                }, KEY_SYMBOL + "=?",
+                new String[]{symbol}, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Stocks stock = new Stocks(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+        return stock;
+    }
+
 
     public List<Stocks> getAllStocks() {
         List<Stocks> stockList = new ArrayList<Stocks>();
@@ -91,6 +114,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_SYMBOL, stock.getSymbol());
+        values.put(KEY_NAME, stock.getName());
+        values.put(KEY_INDEX, stock.getIndex());
         values.put(KEY_VOLAVG, stock.getVolAvg());
         values.put(KEY_NEXTUPDATE, stock.getNextUpdate());
 

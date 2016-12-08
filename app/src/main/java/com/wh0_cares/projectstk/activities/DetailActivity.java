@@ -82,7 +82,7 @@ public class DetailActivity  extends AppCompatActivity {
         pDialog.setIndeterminate(true);
         pDialog.setCanceledOnTouchOutside(false);
         db = new DatabaseHandler(this);
-        if (db.getStock(stockSymbol)) {
+        if (db.hasStock(stockSymbol)) {
             fab.setVisibility(View.GONE);
         } else {
             fab.setVisibility(View.VISIBLE);
