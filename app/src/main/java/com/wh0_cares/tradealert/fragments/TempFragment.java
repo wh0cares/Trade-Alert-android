@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.fragments;
+package com.wh0_cares.tradealert.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wh0_cares.projectstk.R;
-import com.wh0_cares.projectstk.adapters.TempAdapter;
-import com.wh0_cares.projectstk.data.TempData;
-import com.wh0_cares.projectstk.database.DatabaseHandler;
-import com.wh0_cares.projectstk.database.Stocks;
-import com.wh0_cares.projectstk.utils.SaveSharedPreference;
+import com.wh0_cares.tradealert.R;
+import com.wh0_cares.tradealert.adapters.TempAdapter;
+import com.wh0_cares.tradealert.data.TempData;
+import com.wh0_cares.tradealert.database.DatabaseHandler;
+import com.wh0_cares.tradealert.database.Stocks;
+import com.wh0_cares.tradealert.utils.SaveSharedPreference;
 
 import java.util.ArrayList;
 

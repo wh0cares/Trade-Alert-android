@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.database;
+package com.wh0_cares.tradealert.database;
 
 public class Stocks {
 

@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.alarm;
+package com.wh0_cares.tradealert.alarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

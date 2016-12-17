@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.activities;
+package com.wh0_cares.tradealert.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -10,11 +10,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wh0_cares.projectstk.R;
-import com.wh0_cares.projectstk.database.DatabaseHandler;
-import com.wh0_cares.projectstk.database.Stocks;
-import com.wh0_cares.projectstk.utils.SaveSharedPreference;
-import com.wh0_cares.projectstk.utils.SearchBox;
+import com.wh0_cares.tradealert.R;
+import com.wh0_cares.tradealert.database.DatabaseHandler;
+import com.wh0_cares.tradealert.database.Stocks;
+import com.wh0_cares.tradealert.utils.SaveSharedPreference;
 
 import org.json.JSONArray;
 import org.json.JSONException;

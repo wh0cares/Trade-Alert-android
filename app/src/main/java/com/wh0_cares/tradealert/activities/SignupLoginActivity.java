@@ -1,23 +1,19 @@
-package com.wh0_cares.projectstk.activities;
+package com.wh0_cares.tradealert.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.quinny898.library.persistentsearch.SearchResult;
-import com.wh0_cares.projectstk.R;
-import com.wh0_cares.projectstk.utils.SaveSharedPreference;
+import com.wh0_cares.tradealert.R;
+import com.wh0_cares.tradealert.utils.SaveSharedPreference;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.alarm;
+package com.wh0_cares.tradealert.alarm;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,11 +1,11 @@
-package com.wh0_cares.projectstk.adapters;
+package com.wh0_cares.tradealert.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.wh0_cares.projectstk.fragments.PortfolioFragment;
-import com.wh0_cares.projectstk.fragments.TempFragment;
+import com.wh0_cares.tradealert.fragments.PortfolioFragment;
+import com.wh0_cares.tradealert.fragments.TempFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

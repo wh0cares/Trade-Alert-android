@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.adapters;
+package com.wh0_cares.tradealert.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.wh0_cares.projectstk.R;
-import com.wh0_cares.projectstk.data.PortfolioData;
+import com.wh0_cares.tradealert.R;
+import com.wh0_cares.tradealert.data.PortfolioData;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.utils;
+package com.wh0_cares.tradealert.utils;
 
 /*
  * Copyright 2014 Google Inc. All rights reserved.

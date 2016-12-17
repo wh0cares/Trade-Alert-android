@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.alarm;
+package com.wh0_cares.tradealert.alarm;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,11 +9,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
-import com.wh0_cares.projectstk.R;
-import com.wh0_cares.projectstk.activities.MainActivity;
-import com.wh0_cares.projectstk.database.DatabaseHandler;
-import com.wh0_cares.projectstk.database.Stocks;
-import com.wh0_cares.projectstk.utils.SaveSharedPreference;
+import com.wh0_cares.tradealert.R;
+import com.wh0_cares.tradealert.activities.MainActivity;
+import com.wh0_cares.tradealert.database.DatabaseHandler;
+import com.wh0_cares.tradealert.database.Stocks;
+import com.wh0_cares.tradealert.utils.SaveSharedPreference;
 
 import org.json.JSONArray;
 import org.json.JSONException;

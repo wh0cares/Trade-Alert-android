@@ -1,4 +1,4 @@
-package com.wh0_cares.projectstk.database;
+package com.wh0_cares.tradealert.database;
 
 import android.content.ContentValues;
 import android.content.Context;

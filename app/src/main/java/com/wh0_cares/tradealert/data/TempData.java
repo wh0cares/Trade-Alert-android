@@ -1,15 +1,15 @@
-package com.wh0_cares.projectstk.data;
+package com.wh0_cares.tradealert.data;
 
-public class PortfolioData {
+public class TempData {
     public String firstLetter;
     public String name;
     public String index;
     public String symbol;
 
-    public PortfolioData() {
+    public TempData() {
     }
 
-    public PortfolioData(String firstLetter, String name, String index, String symbol) {
+    public TempData(String firstLetter, String name, String index, String symbol) {
         this.firstLetter = firstLetter;
         this.name = name;
         this.index = index;
