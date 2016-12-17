@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project STK</string>
+    <string name="app_name">Trade Alert</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="Portfolio">Portfolio</string>

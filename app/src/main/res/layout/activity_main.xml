@@ -19,7 +19,7 @@
                 android:layout_height="56dp"
                 android:background="?attr/colorPrimary" />
 
-            <com.wh0_cares.projectstk.utils.SearchBox
+            <com.wh0_cares.tradealert.utils.SearchBox
                 android:id="@+id/searchbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-        <com.wh0_cares.projectstk.utils.SlidingTabLayout
+        <com.wh0_cares.tradealert.utils.SlidingTabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dp"

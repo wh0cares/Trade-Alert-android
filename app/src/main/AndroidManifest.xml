@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wh0_cares.projectstk">
+    package="com.wh0_cares.tradealert">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.wh0_cares.tradealert.activities.MainActivity"
             android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,15 +22,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SignupLoginActivity" android:theme="@style/AppTheme.Transparent"/>
-        <activity android:name=".activities.DetailActivity" android:theme="@style/AppTheme"/>
-        <receiver android:name=".alarm.AlarmReceiver" />
-        <receiver android:name=".alarm.BootReceiver" android:enabled="false">
+        <activity android:name="com.wh0_cares.tradealert.activities.SignupLoginActivity" android:theme="@style/AppTheme.Transparent"/>
+        <activity android:name="com.wh0_cares.tradealert.activities.DetailActivity" android:theme="@style/AppTheme"/>
+        <receiver android:name="com.wh0_cares.tradealert.alarm.AlarmReceiver" />
+        <receiver android:name="com.wh0_cares.tradealert.alarm.BootReceiver" android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".alarm.AlarmService" />
+        <service android:name="com.wh0_cares.tradealert.alarm.AlarmService" />
     </application>
 
 </manifest>
