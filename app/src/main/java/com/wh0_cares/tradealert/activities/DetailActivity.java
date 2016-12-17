@@ -80,6 +80,7 @@ public class DetailActivity  extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         pDialog.setIndeterminate(true);
         pDialog.setCanceledOnTouchOutside(false);
+        pDialog.setCancelable(false);
         db = new DatabaseHandler(this);
         if (db.hasStock(stockSymbol)) {
             fab.setVisibility(View.GONE);

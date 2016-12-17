@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             setSupportActionBar(toolbar);
             search = (SearchBox) findViewById(R.id.searchbox);
             setUpSearch();
-            Titles = new CharSequence[]{getString(R.string.Portfolio), "Temp Fragment"};
+            Titles = new CharSequence[]{getString(R.string.Portfolio), getString(R.string.Todays_alert)};
             adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
             pager = (ViewPager) findViewById(R.id.pager);
             pager.setAdapter(adapter);

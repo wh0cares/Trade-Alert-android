@@ -53,4 +53,5 @@
     <string name="Opening_price">Opening price</string>
     <string name="Average_share_volume_for_the_past_50_trading_days">Average share volume for the past 50 trading days</string>
     <string name="notification_message">{COUNT} Stocks have a higher volume then the 30 day average</string>
+    <string name="Todays_alert">Today\'s alert</string>
 </resources>
