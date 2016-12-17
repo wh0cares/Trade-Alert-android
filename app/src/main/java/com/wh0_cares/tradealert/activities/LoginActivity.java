@@ -103,7 +103,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    error(getString(R.string.Error_getting_data));
+                    if (response.code() == 422){
+                        try {
+                            JSONObject obj = new JSONObject(response.body().string());
+                            String message = obj.getString("message");
+                            response.body().close();
+                            error(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     throw new IOException("Unexpected code " + response.body());
                 }
                 try {
