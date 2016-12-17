@@ -20,6 +20,7 @@
     <string name="Enter_a_username">Enter a username</string>
     <string name="Enter_a_password">Enter a password</string>
     <string name="Enter_a_valid_email_address">Enter a valid email address</string>
+    <string name="ad_unit_id">ca-app-pub-7704895981554483/2877749050</string>
 
 
     <string name="search_url"><![CDATA[https://www.google.com/finance/match?matchtype=matchall&ei=NU_wV4iMCdemeJfGuZAG&q=]]></string>

@@ -8,6 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.tradealert.R;
 import com.wh0_cares.tradealert.adapters.ViewPagerAdapter;
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
     CharSequence Titles[];
     int Numboftabs = 2;
     MenuItem[] items;
+    public static FirebaseAnalytics fa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                 }
             });
             tabs.setViewPager(pager);
+            fa = FirebaseAnalytics.getInstance(this);
+            MobileAds.initialize(this, "ca-app-pub-7704895981554483~9203484256");
+            AdView adView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
 //            alarm.setAlarm(this);
         }
     }
