@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
         super.onCreate(savedInstanceState);
         int setup = SaveSharedPreference.getSetup(MainActivity.this);
         if (setup == 0) {
-            Intent intent = new Intent(MainActivity.this, SignupLoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             this.finish();
         } else {
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                 DatabaseHandler db = new DatabaseHandler(this);
                 SaveSharedPreference.clearData(this);
                 db.deleteDatabase(this);
-                Intent intent = new Intent(MainActivity.this, SignupLoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return false;

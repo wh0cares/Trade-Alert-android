@@ -22,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.wh0_cares.tradealert.activities.SignupLoginActivity" android:theme="@style/AppTheme.Transparent"/>
         <activity android:name="com.wh0_cares.tradealert.activities.DetailActivity" android:theme="@style/AppTheme"/>
+        <activity android:name="com.wh0_cares.tradealert.activities.LoginActivity" android:theme="@style/AppTheme"/>
+        <activity android:name="com.wh0_cares.tradealert.activities.SignupActivity" android:theme="@style/AppTheme"/>
         <receiver android:name="com.wh0_cares.tradealert.alarm.AlarmReceiver" />
         <receiver android:name="com.wh0_cares.tradealert.alarm.BootReceiver" android:enabled="false">
             <intent-filter>
