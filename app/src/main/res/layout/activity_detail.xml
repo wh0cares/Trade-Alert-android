@@ -56,20 +56,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/open_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/open_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/open_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/open_value"
                     android:orientation="vertical">
 
@@ -101,20 +101,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/prevClose_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/prevClose_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/prevClose_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/prevClose_value"
                     android:orientation="vertical">
 
@@ -146,20 +146,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/volume_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/volume_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/volume_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/volume_value"
                     android:orientation="vertical">
 
@@ -191,20 +191,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/volume50avg_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/volume50avg_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/volume50avg_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/volume50avg_value"
                     android:orientation="vertical">
 
@@ -236,20 +236,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/marketCap_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/marketCap_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/marketCap_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/marketCap_value"
                     android:orientation="vertical">
 
@@ -281,20 +281,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/peRatio_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/peRatio_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/peRatio_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/peRatio_value"
                     android:orientation="vertical">
 
@@ -326,20 +326,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/eps_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/eps_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/eps_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/eps_value"
                     android:orientation="vertical">
 
@@ -371,20 +371,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/currentYield_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
-                    android:src="@drawable/ic_clear" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/currentYield_img"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:scaleX="1.5"-->
+                    <!--android:scaleY="1.5"-->
+                    <!--android:src="@drawable/ic_clear" />-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/currentYield_img"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/currentYield_value"
                     android:orientation="vertical">
 
