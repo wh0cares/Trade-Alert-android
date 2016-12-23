@@ -7,8 +7,8 @@
         android:title="@string/Search"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/signout"
-        android:icon="@drawable/ic_signout"
+        android:id="@+id/settnigs"
+        android:icon="@drawable/ic_settings"
         android:title="@string/Sign_out"
         app:showAsAction="ifRoom" />
 </menu>

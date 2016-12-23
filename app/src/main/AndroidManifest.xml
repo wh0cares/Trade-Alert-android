@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +26,7 @@
         <activity android:name="com.wh0_cares.tradealert.activities.DetailActivity" android:theme="@style/AppTheme"/>
         <activity android:name="com.wh0_cares.tradealert.activities.LoginActivity" android:theme="@style/AppTheme"/>
         <activity android:name="com.wh0_cares.tradealert.activities.SignupActivity" android:theme="@style/AppTheme"/>
+        <activity android:name="com.wh0_cares.tradealert.activities.SettingsActivity" android:theme="@style/AppTheme"/>
         <receiver android:name="com.wh0_cares.tradealert.alarm.AlarmReceiver" />
         <receiver android:name="com.wh0_cares.tradealert.alarm.BootReceiver" android:enabled="false">
             <intent-filter>

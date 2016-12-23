@@ -1,12 +1,15 @@
 package com.wh0_cares.tradealert.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -16,7 +19,6 @@ import com.quinny898.library.persistentsearch.SearchResult;
 import com.wh0_cares.tradealert.R;
 import com.wh0_cares.tradealert.adapters.ViewPagerAdapter;
 import com.wh0_cares.tradealert.alarm.AlarmReceiver;
-import com.wh0_cares.tradealert.database.DatabaseHandler;
 import com.wh0_cares.tradealert.utils.SaveSharedPreference;
 import com.wh0_cares.tradealert.utils.SearchBox;
 import com.wh0_cares.tradealert.utils.SlidingTabLayout;
@@ -35,7 +37,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements SearchBox.SearchListener {
+public class MainActivity extends AppCompatActivity implements SearchBox.SearchListener{
 
     private final OkHttpClient client = new OkHttpClient();
     @Bind(R.id.toolbar)
@@ -80,11 +82,19 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
             });
             tabs.setViewPager(pager);
             fa = FirebaseAnalytics.getInstance(this);
-            MobileAds.initialize(this, "ca-app-pub-7704895981554483~9203484256");
-            AdView adView = (AdView) findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
-//            alarm.setAlarm(this);
+
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            if (!prefs.getBoolean("remove_ads", false)) {
+                MobileAds.initialize(this, "ca-app-pub-7704895981554483~9203484256");
+                AdView adView = (AdView) findViewById(R.id.adView);
+                AdRequest adRequest = new AdRequest.Builder().build();
+                adView.loadAd(adRequest);
+            }
+
+            if(!prefs.getBoolean("alarm_set", false)){
+                alarm.setAlarm(this);
+                prefs.edit().putBoolean("alarm_set", true).apply();
+            }
         }
     }
 
@@ -126,13 +136,9 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
                 openSearch();
                 return false;
             }
-            case R.id.signout: {
-                DatabaseHandler db = new DatabaseHandler(this);
-                SaveSharedPreference.clearData(this);
-                db.deleteDatabase(this);
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            case R.id.settnigs: {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
-                finish();
                 return false;
             }
             default: {
@@ -197,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements SearchBox.SearchL
 //        search.setSearchString("");
 //        search.clearSearchable();
 //        search.clearResults();
+        Toast.makeText(this, R.string.Select_a_stock_from_the_suggestions, Toast.LENGTH_LONG).show();
     }
 
     @Override
